@@ -14,7 +14,7 @@ const ItemList = ({ items, onClickDone }) => (<ul className={styles.item_list}>
         <Checkbox checked={item.isDone}
           value="checkedA"
           color="primary"
-          onClick={() => onClickDone(item.isDone)}
+          onClick={() => onClickDone(item.id)}
         />
       }
       label=<Item value={item.value} isDone={item.isDone}/>
