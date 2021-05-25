@@ -7,13 +7,14 @@ import IconButton from '@material-ui/core/IconButton';
 
 import styles from './ItemList.module.css'
 
-const ItemList = ({ items }) => (<ul className={styles.item_list}>
+const ItemList = ({ items, onClickDone }) => (<ul className={styles.item_list}>
   {items.map(item => <li key={item.value} className={styles.item}>
     <FormControlLabel
       control={
         <Checkbox checked={item.isDone}
           value="checkedA"
           color="primary"
+          onClick={() => onClickDone(item.id)}
         />
       }
       label=<Item value={item.value} isDone={item.isDone}/>

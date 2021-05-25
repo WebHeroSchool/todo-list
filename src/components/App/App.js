@@ -4,33 +4,57 @@ import ItemList from '../ItemList/ItemList';
 import Footer from '../Footer/Footer';
 import styles from './App.module.css';
 
-const items = [
-  {
-    value : 'Написать приложение',
-    isDone: true
-  },
-  {
-    value : 'Закончить блок react',
-    isDone: false
-  },
-  {
-    value : 'Выучить английский',
-    isDone: false
-  },
-  {
-    value : 'Приступить к следующему блоку',
-    isDone: false
+class App extends React.Component {
+  state = {
+    items: [
+      {
+        value: 'Написать приложение',
+        isDone: true,
+        id: 1
+      },
+      {
+        value: 'Закончить блок react',
+        isDone: false,
+        id: 2
+      },
+      {
+        value: 'Выучить английский',
+        isDone: false,
+        id: 3
+      },
+      {
+        value: 'Приступить к следующему блоку',
+        isDone: false,
+        id: 4
+      }
+    ]
+  };
+
+  onClickDone = id => {
+    const newItemList = this.state.items.map(item => {
+      const newItem = { ...item };
+
+      if (item.id === id) {
+        newItem.isDone = !item.isDone;
+      }
+
+      return newItem;
+    });
+
+    this.setState({ items: newItemList });
+  };
+
+  render() {
+    const count = this.state.items.filter(item => item.isDone === false);
+
+    return (
+      <div className={styles.wrap}>
+        <h1>Список дел:</h1>
+        <InputItem />
+        <ItemList items={this.state.items} onClickDone={this.onClickDone} />
+        <Footer count={count.length} />
+      </div>
+    );
   }
-];
-
-const count =  items.filter(item => item.isDone === false);
-
-const App = () => (
-  <div className={styles.wrap}>
-    <h1>Список дел:</h1>
-    <InputItem />
-    <ItemList items={items}/>
-    <Footer count={count.length} />
-  </div>);
-
+};
 export default App;
