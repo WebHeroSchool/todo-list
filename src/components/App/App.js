@@ -27,7 +27,9 @@ class App extends React.Component {
         isDone: false,
         id: 4
       }
-    ]
+    ],
+    count: 4,
+    error: false
   };
 
   onClickDone = id => {
@@ -45,9 +47,28 @@ class App extends React.Component {
   };
 
   onClickDelete = id => {
-    const newItemList = this.state.items.filter( item => item.id != id);
+    const newItemList = this.state.items.filter(item => item.id != id);
     this.setState({ items: newItemList });
   }
+
+  onClickAdd = value => {
+    if (value !== '') {
+      this.setState(state => ({
+        items: [
+          ...state.items,
+          {
+            value,
+            isDone: false,
+            id: state.count + 1
+          }
+        ],
+        count: state.count + 1,
+        error: false
+      }));
+    } else {
+      this.setState(state => ({ error: true }))
+    }
+  };
 
   render() {
     const casesCount = this.state.items.filter(item => item.isDone === false);
@@ -55,15 +76,16 @@ class App extends React.Component {
     return (
       <div className={styles.wrap}>
         <h1>Список дел:</h1>
-        <InputItem />
+        <InputItem onClickAdd={this.onClickAdd} error={this.state.error} />
         <ItemList
-        items={this.state.items}
-        onClickDone={this.onClickDone}
-        onClickDelete={this.onClickDelete}
-         />
+          items={this.state.items}
+          onClickDone={this.onClickDone}
+          onClickDelete={this.onClickDelete}
+        />
         <Footer casesCount={casesCount.length} />
       </div>
     );
   }
 };
+
 export default App;

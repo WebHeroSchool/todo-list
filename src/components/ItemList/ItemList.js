@@ -8,7 +8,7 @@ import IconButton from '@material-ui/core/IconButton';
 import styles from './ItemList.module.css'
 
 const ItemList = ({ items, onClickDone, onClickDelete }) => (<ul className={styles.item_list}>
-  {items.map(item => <li key={item.value} className={styles.item}>
+  {items.map(item => <li key={item.id} className={styles.item}>
     <FormControlLabel
       control={
         <Checkbox checked={item.isDone}
@@ -19,12 +19,11 @@ const ItemList = ({ items, onClickDone, onClickDelete }) => (<ul className={styl
       }
       label=<Item value={item.value} isDone={item.isDone}/>
     />
-    <IconButton aria-label="delete">
-      <DeleteIcon
-      fontSize="small"
-      onClick={() => onClickDelete(item.id)}
-      />
-    </IconButton>
+    <div onClick={() => onClickDelete(item.id)}>
+      <IconButton aria-label='delete'>
+        <DeleteIcon fontSize='small' />
+      </IconButton>
+    </div>
   </li>)}
 </ul>);
 
