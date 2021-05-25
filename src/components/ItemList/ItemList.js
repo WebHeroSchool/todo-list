@@ -7,7 +7,7 @@ import IconButton from '@material-ui/core/IconButton';
 
 import styles from './ItemList.module.css'
 
-const ItemList = ({ items, onClickDone }) => (<ul className={styles.item_list}>
+const ItemList = ({ items, onClickDone, onClickDelete }) => (<ul className={styles.item_list}>
   {items.map(item => <li key={item.value} className={styles.item}>
     <FormControlLabel
       control={
@@ -20,7 +20,10 @@ const ItemList = ({ items, onClickDone }) => (<ul className={styles.item_list}>
       label=<Item value={item.value} isDone={item.isDone}/>
     />
     <IconButton aria-label="delete">
-      <DeleteIcon fontSize="small" />
+      <DeleteIcon
+      fontSize="small"
+      onClick={() => onClickDelete(item.id)}
+      />
     </IconButton>
   </li>)}
 </ul>);
