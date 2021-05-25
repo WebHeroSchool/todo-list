@@ -29,7 +29,7 @@ class App extends React.Component {
       }
     ],
     count: 4,
-    error: false
+    isError: false
   };
 
   onClickDone = id => {
@@ -63,10 +63,10 @@ class App extends React.Component {
           }
         ],
         count: state.count + 1,
-        error: false
+        isError: false
       }));
     } else {
-      this.setState(state => ({ error: true }))
+      this.setState(state => ({ isError: true }))
     }
   };
 
@@ -76,7 +76,7 @@ class App extends React.Component {
     return (
       <div className={styles.wrap}>
         <h1>Список дел:</h1>
-        <InputItem onClickAdd={this.onClickAdd} error={this.state.error} />
+        <InputItem onClickAdd={this.onClickAdd} isError={this.state.isError} />
         <ItemList
           items={this.state.items}
           onClickDone={this.onClickDone}

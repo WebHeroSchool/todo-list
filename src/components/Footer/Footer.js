@@ -13,4 +13,8 @@ const Footer = ({ casesCount }) => (<footer className={styles.wrap}>
   </div>
 </footer>);
 
+Footer.defaultProps = {
+  casesCount: 'Неизвестно'
+}
+
 export default Footer;

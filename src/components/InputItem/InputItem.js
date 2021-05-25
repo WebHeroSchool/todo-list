@@ -18,7 +18,7 @@ class InputItem extends React.Component {
 
   render() {
     const { onClickAdd } = this.props;
-    const isError = this.props.error;
+    const isError = this.props.isError;
     let textField;
 
     if (isError) {
@@ -63,6 +63,5 @@ class InputItem extends React.Component {
     );
   }
 };
-
 
 export default InputItem;
