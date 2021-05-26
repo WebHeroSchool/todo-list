@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styles from './Footer.module.css';
 
 const Footer = ({ casesCount }) => (<footer className={styles.wrap}>
@@ -13,8 +14,8 @@ const Footer = ({ casesCount }) => (<footer className={styles.wrap}>
   </div>
 </footer>);
 
-Footer.defaultProps = {
-  casesCount: 'Неизвестно'
-}
+Footer.propTypes = {
+  casesCount: PropTypes.number.isRequired
+};
 
 export default Footer;
