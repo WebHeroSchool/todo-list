@@ -2,8 +2,13 @@
 
 .wrap {
  display: flex;
- flex-direction: column;
+ justify-content: space-between;
  margin: auto;
- width: 600px;
+ width: 700px;
  font-family: "Montserrat", sans-serif;
+}
+
+.link {
+    color: #000;
+    text-decoration: none;
 }

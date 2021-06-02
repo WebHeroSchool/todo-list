@@ -1,60 +1,31 @@
 import React from 'react';
-import InputItem from '../InputItem/InputItem';
-import ItemList from '../ItemList/ItemList';
-import Footer from '../Footer/Footer';
+import PropTypes from 'prop-types';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import About from '../About/About';
+import Todo from '../Todo/Todo';
+import Contacts from '../Contacts/Contacts';
+import Paper from '@material-ui/core/Paper';
+import MenuItem from '@material-ui/core/MenuItem';
+import MenuList from '@material-ui/core/MenuList';
 import styles from './App.module.css';
 
-class App extends React.Component {
-  state = {
-    items: [
-      {
-        value: 'Написать приложение',
-        isDone: true,
-        id: 1
-      },
-      {
-        value: 'Закончить блок react',
-        isDone: false,
-        id: 2
-      },
-      {
-        value: 'Выучить английский',
-        isDone: false,
-        id: 3
-      },
-      {
-        value: 'Приступить к следующему блоку',
-        isDone: false,
-        id: 4
-      }
-    ]
-  };
-
-  onClickDone = id => {
-    const newItemList = this.state.items.map(item => {
-      const newItem = { ...item };
-
-      if (item.id === id) {
-        newItem.isDone = !item.isDone;
-      }
-
-      return newItem;
-    });
-
-    this.setState({ items: newItemList });
-  };
-
-  render() {
-    const count = this.state.items.filter(item => item.isDone === false);
-
-    return (
+  const App = () => (
+    <Router>
       <div className={styles.wrap}>
-        <h1>Список дел:</h1>
-        <InputItem />
-        <ItemList items={this.state.items} onClickDone={this.onClickDone} />
-        <Footer count={count.length} />
+        <Paper className={styles.sidebar}>
+          <MenuList>
+            <Link to='/' className={styles.link}><MenuItem>Обо мне</MenuItem></Link>
+            <Link to='/todo' className={styles.link}><MenuItem>Дела</MenuItem></Link>
+            <Link to='/contacts' className={styles.link}><MenuItem>Контакты</MenuItem></Link>
+          </MenuList>
+        </Paper>
+        <Paper>
+          <Route path='/' exact component={About} />
+          <Route path='/todo' component={Todo} />
+          <Route path='/contacts' component={Contacts} />
+        </Paper>
       </div>
-    );
-  }
-};
-export default App;
+    </Router>
+  );
+
+  export default App;
