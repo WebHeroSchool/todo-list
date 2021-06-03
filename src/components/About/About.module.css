@@ -2,3 +2,36 @@
   margin: 10px;
   width: 600px;
 }
+
+.preloader {
+  background: url(./prelaoder.gif);
+  background-size: contain;
+  height: 80px;
+  width: 80px;
+  margin: auto;
+}
+
+.repo {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.user_avatar {
+  height: 150px;
+  width: 150px;
+}
+
+.repo_list {
+ padding: 0 0 0 20px;
+}
+
+.repo_name {
+  color: #000;
+  text-decoration: none;
+}
+
+.repo_name:hover {
+  color: #442a82;
+  text-decoration: underline;
+} 
