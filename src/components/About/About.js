@@ -1,8 +1,8 @@
 import React from 'react';
 import styles from './About.module.css';
-import { Ocktokit }  from '@octokit/rest';
+import { Octokit }  from '@octokit/rest';
 
-const octokit = new Ocktokit();
+const octokit = new Octokit();
 
 class About extends React.Component {
   state = {

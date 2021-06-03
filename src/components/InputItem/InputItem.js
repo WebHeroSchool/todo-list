@@ -30,7 +30,6 @@ class InputItem extends React.Component {
         defaultValue=' '
         variant='outlined'
         className={makeStyles.textField}
-        className={styles.input_field}
         value={this.state.inputValue}
         onChange={event => this.setState({ inputValue: event.target.value })}
       />
