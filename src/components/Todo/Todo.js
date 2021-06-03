@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import InputItem from '../InputItem/InputItem';
 import ItemList from '../ItemList/ItemList';
 import Footer from '../Footer/Footer';
@@ -40,7 +39,7 @@ class Todo extends React.Component {
 
       if (item.id === id) {
         newItem.isDone = !item.isDone;
-      }
+      };
 
       return newItem;
     });
@@ -49,7 +48,7 @@ class Todo extends React.Component {
   };
 
   onClickDelete = id => {
-    const newItemList = this.state.items.filter(item => item.id != id);
+    const newItemList = this.state.items.filter(item => item.id !== id);
     this.setState({ items: newItemList });
   };
 
@@ -68,8 +67,8 @@ class Todo extends React.Component {
         isError: false
       }));
     } else {
-      this.setState(state => ({ isError: true }))
-    }
+      this.setState(state => ({ isError: true }));
+    };
   };
 
   render() {
@@ -87,7 +86,7 @@ class Todo extends React.Component {
         <Footer casesCount={casesCount.length} />
       </div>
     );
-  }
+  };
 };
 
 export default Todo; 

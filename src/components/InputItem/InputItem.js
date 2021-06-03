@@ -18,7 +18,6 @@ class InputItem extends React.Component {
   };
 
   render() {
-    const { onClickAdd } = this.props;
     const isError = this.props.isError;
     let textField;
 
@@ -45,7 +44,7 @@ class InputItem extends React.Component {
         value={this.state.inputValue}
         onChange={event => this.setState({ inputValue: event.target.value })}
       />
-    }
+    };
 
     return (
       <div className={styles.input}>
@@ -62,7 +61,7 @@ class InputItem extends React.Component {
         </Button>
       </div>
     );
-  }
+  };
 };
 
 InputItem.propTypes = {
