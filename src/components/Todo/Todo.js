@@ -1,50 +1,43 @@
 import React from 'react';
 import InputItem from '../InputItem/InputItem';
 import ItemList from '../ItemList/ItemList';
-import Footer from '../Footer/Footer';
+import TodoFilter from '../TodoFilter/TodoFilter';
+import Card from '@material-ui/core/Card';
 import styles from './Todo.module.css';
 
+const sortingItemsTitle = {
+  completed: 'Завершенные',
+  unfinished: 'Незавершенные',
+  all: 'Все'
+};
 
 class Todo extends React.Component {
   state = {
-    items:[
-      {
-        value : 'Написать приложение',
-        isDone: true,
-        id: 1
-      },
-      {
-        value : 'Закончить блок react',
-        isDone: false,
-        id: 2
-      },
-      {
-        value : 'Выучить английский',
-        isDone: false,
-        id: 3
-      },
-      {
-        value : 'Приступить к следующему блоку',
-        isDone: false,
-        id: 4
-      }
-    ],
-    count: 4,
-    isError: false
+    items:
+      JSON.parse(localStorage.getItem('editedDealList') ||
+        '[{"value":"Задача 1","isDone":false,"id":1},{"value":"Задача 2","isDone":false,"id":2}]'
+      ),
+    count: 2,
+    isEmpty: false,
+    isExist: false,
+    isEditing: false,
+    sorting: sortingItemsTitle.all
   };
 
   onClickDone = id => {
-    const newItemList = this.state.items.map(item => {
-      const newItem = { ...item };
+    if (!this.state.isEditing) {
+      const newItemList = this.state.items.map(item => {
+        const newItem = { ...item };
 
-      if (item.id === id) {
-        newItem.isDone = !item.isDone;
-      };
+        if (item.id === id) {
+          newItem.isDone = !item.isDone;
+        };
 
-      return newItem;
-    });
+        return newItem;
+      });
 
-    this.setState({ items: newItemList });
+      this.setState({ items: newItemList });
+    };
   };
 
   onClickDelete = id => {
@@ -53,7 +46,7 @@ class Todo extends React.Component {
   };
 
   onClickAdd = value => {
-    if (value !== '') {
+    if (value !== '' & !this.state.items.some(item => item.value.toLowerCase() === value.toLowerCase())) {
       this.setState(state => ({
         items: [
           ...state.items,
@@ -64,29 +57,87 @@ class Todo extends React.Component {
           }
         ],
         count: state.count + 1,
-        isError: false
+        isEmpty: false,
+        isExist: false
       }));
     } else {
-      this.setState(state => ({ isError: true }));
+      this.setState(state => (
+        {
+          isEmpty: value === '',
+          isExist: value !== ''
+        }
+      ));
     };
   };
 
-  render() {
-    const casesCount = this.state.items.filter(item => item.isDone === false);
+  onClickRedact = (id, isDone) => {
+    if (!isDone) {
+      document.getElementById(id).contentEditable = true;
+      document.getElementById(id).focus();
+      this.setState({ isEditing: true });
+    };
+  };
 
-    return(
-      <div className={styles.wrap}>
-        <h1>Список дел:</h1>
-        <InputItem onClickAdd={this.onClickAdd} isError={this.state.isError} />
-        <ItemList 
-          items={this.state.items}
-          onClickDone={this.onClickDone}
-          onClickDelete={this.onClickDelete}
-        />
-        <Footer casesCount={casesCount.length} />
-      </div>
+  onChangeItem = (newValue, id) => {
+    const newItemList = this.state.items.map(item => {
+      const newItem = { ...item };
+
+      if (item.id === id) {
+        newItem.value = newValue;
+      };
+      return newItem;
+    });
+
+    setTimeout(() => {
+      this.setState(state => ({ items: newItemList, isEditing: false }));
+    }, 200);
+    document.getElementById(id).contentEditable = false;
+  };
+
+  onClickSort = sorting => this.setState({ sorting: sorting });
+
+  render() {
+    let dealListString = JSON.stringify(this.state.items);
+    localStorage.setItem('editedDealList', dealListString);
+
+    let sortingItems;
+    switch (this.state.sorting) {
+      case sortingItemsTitle.completed: sortingItems = this.state.items.filter(item => item.isDone);
+        break;
+      case sortingItemsTitle.unfinished: sortingItems = this.state.items.filter(item => !item.isDone);
+        break;
+      case sortingItemsTitle.all: sortingItems = this.state.items;
+        break;
+    };
+
+    return (
+      <Card className={styles.wrap}>
+        <div className={styles.header}>
+          <h1 className={styles.title}>Список моих дел</h1>
+          <TodoFilter
+            items={this.state.items}
+            onClickSort={this.onClickSort}
+            sorting={this.state.sorting}
+          />
+        </div>
+        <div className={styles.items_section}>
+          <ItemList
+            sorting={sortingItems}
+            sortingValue={this.state.sorting}
+            onClickDone={this.onClickDone}
+            onClickDelete={this.onClickDelete}
+            onClickRedact={this.onClickRedact}
+            onChangeItem={this.onChangeItem}
+          />
+          <InputItem
+            onClickAdd={this.onClickAdd}
+            isEmpty={this.state.isEmpty}
+            isExist={this.state.isExist}
+          />
+        </div>
+      </Card>
     );
   };
 };
 
-export default Todo; 
+export default Todo;

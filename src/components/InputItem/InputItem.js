@@ -1,9 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import classnames from 'classnames';
 import styles from './InputItem.module.css';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import { makeStyles } from '@material-ui/core/styles';
 
 class InputItem extends React.Component {
   state = {
@@ -18,46 +16,25 @@ class InputItem extends React.Component {
   };
 
   render() {
-    const isError = this.props.isError;
-    let textField;
+    const { isEmpty, isExist } = this.props;
 
-    if (isError) {
-      textField = <TextField
-        error
-        id='outlined-error'
-        label='Поле должно быть заполнено!'
-        margin='ense'
-        defaultValue=' '
-        variant='outlined'
-        className={makeStyles.textField}
-        value={this.state.inputValue}
-        onChange={event => this.setState({ inputValue: event.target.value })}
-      />
-    } else {
-      textField = <TextField
-        id='outlined-dense'
-        label='Новое дело'
-        margin='ense'
-        variant='outlined'
-        className={styles.input_field}
-        value={this.state.inputValue}
-        onChange={event => this.setState({ inputValue: event.target.value })}
-      />
-    };
-
-    return (
+    return(
       <div className={styles.input}>
-        <div className={styles.input_wrap}>
-          {textField}
+        <div className={classnames({
+          [styles.input_wrap]: true,
+          [styles.empty_field]: isEmpty,
+          [styles.exist_field]: isExist
+        })
+        }>
+          <input
+            type='text'
+            placeholder='Просто введите сюда название дела...'
+            className={styles.input_field}
+            value={this.state.inputValue}
+            onChange={event => this.setState({inputValue: event.target.value})}
+          />
         </div>
-        <Button
-          variant='contained'
-          color='primary'
-          className={styles.button}
-          onClick={this.onButtonClick}
-        >
-          <strong>Add</strong>
-        </Button>
+        <div className={styles.button} onClick={this.onButtonClick}></div>
       </div>
     );
   };
@@ -65,7 +42,8 @@ class InputItem extends React.Component {
 
 InputItem.propTypes = {
   onClickAdd: PropTypes.func.isRequired,
-  isError: PropTypes.bool.isRequired
-}
+  isExist: PropTypes.bool.isRequired,
+  isEmpty: PropTypes.bool.isRequired
+};
 
 export default InputItem;

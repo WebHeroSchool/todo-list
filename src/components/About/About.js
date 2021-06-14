@@ -1,8 +1,13 @@
 import React from 'react';
+import RepoList from '../RepoList/RepoList';
+import Contacts from '../Contacts/Contacts';
 import styles from './About.module.css';
+import Card from '@material-ui/core/Card';
 import { Octokit }  from '@octokit/rest';
 
+
 const octokit = new Octokit();
+const userName = 'TeadorAvesador';
 
 class About extends React.Component {
   state = {
@@ -10,12 +15,14 @@ class About extends React.Component {
     repoList: [],
     infoAboutUser: [],
     isError: false,
-    errorMessage: ' '
-  }
+    firstRepo: 0,
+    lastRepo: 5
+  };
 
   componentDidMount() {
     octokit.repos.listForUser({
-      username: 'TeadorAvesador'
+      username: userName,
+      per_page: 100
     })
     .then(({ data }) => {
       this.setState({ 
@@ -27,56 +34,112 @@ class About extends React.Component {
       this.setState({ 
         isLoading: false,
         isError: true,
-        errorMessage: err
       });
-    })
+    });
 
     octokit.users.getByUsername({
-      username: 'TeadorAvesador'
+      username: userName
     })
     .then(({data}) => {
       this.setState({ 
         infoAboutUser: data,
         isLoading: false,
-      })
+      });
     })
     .catch(err => {
       this.setState({ 
         isLoading: false,
         isError: true,
-        errorMessage: err
       });
-    })
+    });
+  };
+
+  onClickNext = () => {
+    this.setState({
+      firstRepo: this.state.firstRepo + 5,
+      lastRepo: this.state.lastRepo + 5
+    });
+  };
+
+  onClickBack = () => {
+    this.setState({
+      firstRepo: this.state.firstRepo - 5,
+      lastRepo: this.state.lastRepo - 5
+    });
   };
 
   render() {
-    const { isLoading, repoList, isError, errorMessage, infoAboutUser } = this.state;
-    const Preloader = () => <div className={styles.preloader}></div>;
+    const { isLoading, repoList, isError, infoAboutUser } = this.state;
 
     return(
       <div className={styles.wrap}>
-        {isLoading ? <Preloader /> :
-          <div>
-            <h1>Обо мне:</h1>
-            {isError ? 'Во время получения данных с сервера возникла ошибка:' + errorMessage :
-              <div className={styles.repo}>
-                <b>Логин: {infoAboutUser.login}</b>
-                <img src={infoAboutUser.avatar_url} alt='Фото пользователя' className={styles.user_avatar} />
-                <h3>Мои репозитории:</h3>
-                <ol className={styles.repo_list}>
-                  {repoList.map(repo => (
-                    <li key={repo.id} className={styles.repo_name_wrap}>
-                      <a href={repo.svn_url} className={styles.repo_name}>{repo.name}</a>
-                    </li>
-                  ))}
-                </ol>
-              </div>
-            }
-          </div>
-        }
+        <Card className={styles.user_card}>
+          {isLoading ?
+            <div className={styles.preloader}></div> :
+            <div>
+              {isError ?
+                <div className={styles.info_about_user}>
+                  <h1 className={styles.name}>Kseniya Burnashova</h1>
+                  <Contacts />
+                </div> :
+                <div className={styles.user}>
+                  <img src={infoAboutUser.avatar_url} alt='Фото пользователя' className={styles.user_avatar} />
+                  <div className={styles.info_about_user}>
+                    <h1 className={styles.name}>{infoAboutUser.name}</h1>
+                    <div className={styles.bio}>{infoAboutUser.bio}</div>
+                    <Contacts />
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </Card>
+        <Card className={styles.repo_card}>
+          {isLoading ?
+            <div>
+              <h3 className={styles.title}>Репозитории на github.com</h3>
+              <div className={styles.preloader}></div>
+            </div> :
+            <div>
+              {isError ?
+                <div className={styles.error_wrap}>
+                  <h3 className={styles.title}>Репозитории на github.com</h3>
+                  <div className={styles.error}>
+                    <div className={styles.error_image}></div>
+                    <p className={styles.error_message}>Что-то пошло не так...</p>
+                    <p className={styles.message_try_again}>
+                      Попробуйте <a href='.'>загрузить</a> ещё раз
+                    </p>
+                  </div>
+                </div> :
+                <div>
+                  {repoList.length === 0 ?
+                    <div className={styles.error_wrap}>
+                      <h3 className={styles.title}>Репозитории на github.com</h3>
+                      <div className={styles.error}>
+                        <div className={styles.error_image}></div>
+                        <p className={styles.error_message}>Репозитории отсутствуют</p>
+                        <p className={styles.message_try_again}>
+                          Добавьте как минимум один репозиторий на <a href='github.com'>github.com</a>
+                        </p>
+                      </div>
+                    </div> :
+                    <RepoList
+                      repoList={repoList}
+                      infoAboutUser={infoAboutUser}
+                      onClickNext={this.onClickNext}
+                      onClickBack={this.onClickBack}
+                      firstRepo={this.state.firstRepo}
+                      lastRepo={this.state.lastRepo}
+                    />
+                  }
+                </div>
+              }
+            </div>
+          } 
+        </Card>
       </div>
     )
-  }
+  };
 };
-
 export default About;
